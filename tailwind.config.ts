@@ -1,3 +1,5 @@
+import colors from "tailwindcss/colors";
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -9,8 +11,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        primary: colors.indigo,
       },
     },
   },
