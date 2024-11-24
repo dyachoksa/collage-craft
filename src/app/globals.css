@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+}
+
 @layer components {
   .section-wrapper {
     @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;

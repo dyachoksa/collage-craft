@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ArrowRightIcon, Wand2Icon } from "lucide-react";
 
 import designInspirationSvg from "~/assets/undraw-design-inspiration.svg";
+import { Button } from "~/components/ui/button";
 
 export default function Hero() {
   return (
@@ -22,25 +23,25 @@ export default function Hero() {
               </p>
 
               <div className="mt-5 sm:mt-8 sm:flex sm:justify-center md:justify-start">
-                <div className="rounded-md shadow">
-                  <button className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-pink-700 hover:bg-pink-800 md:py-4 md:text-lg md:px-10">
+                <div>
+                  <Button className="w-full" size="lg">
                     <Wand2Icon className="h-5 w-5 mr-2" />
                     Try it free
-                  </button>
+                  </Button>
                 </div>
 
                 <div className="mt-3 sm:mt-0 sm:ml-3">
-                  <button className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-pink-700 bg-pink-100 hover:bg-pink-200 md:py-4 md:text-lg md:px-10">
+                  <Button className="w-full" size="lg" variant="secondary">
                     View examples
                     <ArrowRightIcon className="h-5 w-5 ml-2" />
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="py-4 sm:py-6 md:py-8 lg:py-10 xl:py-14">
-            <Image src={designInspirationSvg} alt="Collage Generator" className="w-full h-auto" />
+            <Image src={designInspirationSvg} alt="Collage Generator" className="w-full h-auto" priority />
           </div>
         </div>
       </div>

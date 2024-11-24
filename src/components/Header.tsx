@@ -3,6 +3,8 @@ import Link from "next/link";
 
 import { LogInIcon, UserPlusIcon } from "lucide-react";
 
+import { Button } from "~/components/ui/button";
+
 export default function Header() {
   return (
     <header className="fixed w-full bg-white/90 backdrop-blur-sm z-50 border-b border-gray-100">
@@ -16,25 +18,26 @@ export default function Header() {
           </Link>
 
           <nav className="md:flex gap-8 items-center">
-            <a href="#features" className="text-gray-600 hover:text-pink-700">
+            <a href="#features" className="text-gray-600 hover:text-primary-700">
               Features
             </a>
-            <a href="#examples" className="text-gray-600 hover:text-pink-700">
+            <a href="#examples" className="text-gray-600 hover:text-primary-700">
               Examples
             </a>
-            <a href="#pricing" className="text-gray-600 hover:text-pink-700">
-              Pricing
-            </a>
+            <Link href="/about" className="text-gray-600 hover:text-primary-700">
+              About
+            </Link>
 
             <div className="flex gap-4 items-center">
-              <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-pink-700 hover:text-pink-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
-                <LogInIcon className="h-4 w-4 mr-2" />
+              <Button variant="ghost">
+                <LogInIcon className="h-4 w-4 mr-1" />
                 Login
-              </button>
-              <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-pink-700 hover:bg-pink-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
-                <UserPlusIcon className="h-4 w-4 mr-2" />
+              </Button>
+
+              <Button>
+                <UserPlusIcon className="h-4 w-4 mr-1" />
                 Sign Up
-              </button>
+              </Button>
             </div>
           </nav>
         </div>
