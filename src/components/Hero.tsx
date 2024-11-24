@@ -41,7 +41,7 @@ export default function Hero() {
           </div>
 
           <div className="py-4 sm:py-6 md:py-8 lg:py-10 xl:py-14">
-            <Image src={designInspirationSvg} alt="Collage Generator" className="w-full h-auto" priority />
+            <Image src={designInspirationSvg} alt="Collage Generator" className="w-full h-auto" />
           </div>
         </div>
       </div>

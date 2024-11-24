@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { LogInIcon, UserPlusIcon } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
@@ -29,15 +30,25 @@ export default function Header() {
             </Link>
 
             <div className="flex gap-4 items-center">
-              <Button variant="ghost">
-                <LogInIcon className="h-4 w-4 mr-1" />
-                Login
-              </Button>
+              <SignedOut>
+                <SignInButton>
+                  <Button variant="ghost">
+                    <LogInIcon className="h-4 w-4 mr-1" />
+                    Login
+                  </Button>
+                </SignInButton>
 
-              <Button>
-                <UserPlusIcon className="h-4 w-4 mr-1" />
-                Sign Up
-              </Button>
+                <SignUpButton>
+                  <Button>
+                    <UserPlusIcon className="h-4 w-4 mr-1" />
+                    Sign Up
+                  </Button>
+                </SignUpButton>
+              </SignedOut>
+
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
             </div>
           </nav>
         </div>
