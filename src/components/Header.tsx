@@ -19,12 +19,12 @@ export default function Header() {
           </Link>
 
           <nav className="md:flex gap-8 items-center">
-            <a href="#features" className="text-gray-600 hover:text-primary-700">
-              Features
-            </a>
-            <a href="#examples" className="text-gray-600 hover:text-primary-700">
-              Examples
-            </a>
+            <Link href="/" className="text-gray-600 hover:text-primary-700">
+              Home
+            </Link>
+            <Link href="/collages" className="text-gray-600 hover:text-primary-700">
+              Collages
+            </Link>
             <Link href="/about" className="text-gray-600 hover:text-primary-700">
               About
             </Link>

@@ -36,12 +36,14 @@ export default function RootLayout({ children }: Props) {
           <link rel="manifest" href="/site.webmanifest" />
         </head>
 
-        <body className="bg-white text-sm text-gray-900 font-sans antialiased ">
-          <Header />
+        <body className="bg-white text-sm text-gray-900 font-sans antialiased">
+          <div className="flex flex-col h-dvh">
+            <Header />
 
-          <main className="pt-16">{children}</main>
+            <main className="pt-16 flex-1">{children}</main>
 
-          <Footer />
+            <Footer />
+          </div>
         </body>
       </html>
     </ClerkProvider>
