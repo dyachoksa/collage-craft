@@ -6,6 +6,7 @@ import { ArrowLeftIcon } from "lucide-react";
 import { getCollageDetails } from "~/actions/collages";
 import AppImage from "~/components/AppImage";
 import { GenerateCollageButton, ImageUploader, ProcessingIndicator } from "~/components/collages";
+import PlaceholderIcon from "~/components/PlaceholderIcon";
 import { requireUserId } from "~/hooks";
 
 interface Props {
@@ -60,17 +61,7 @@ export default async function CollageDetails({ params }: Props) {
         <div className="col-span-3 my-4">
           {!collage.cloudinaryId && (
             <div className="relative min-h-60 h-full p-8 flex items-center justify-center gap-4">
-              <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" className="block text-gray-200 fixed h-72">
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1"
-                  d="M40.5 5.5h-33a2 2 0 0 0-2 2v33a2 2 0 0 0 2 2h33a2 2 0 0 0 2-2v-33a2 2 0 0 0-2-2ZM24 42.5v-37M42.5 18.5H23.9M23.9 30.5H5.4"
-                />
-              </svg>
-
+              <PlaceholderIcon className="block text-gray-200 fixed h-72" />
               <GenerateCollageButton collageId={collage.id} />
             </div>
           )}

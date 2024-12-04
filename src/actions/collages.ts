@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { ulid } from "ulid";
 
 import { db } from "~/database";
@@ -22,12 +22,20 @@ const getCloudinaryFolder = () => {
   return [baseFolder, new Date().getFullYear().toString()].join("/");
 };
 
-export const getCollages = async (userId?: string) => {
+export const getCollages = async (userId?: string): Promise<Omit<SelectCollage, "userId" | "cloudinaryResponse">[]> => {
   if (!userId) {
     userId = await requireUserId();
   }
 
-  return db.select().from(collages).where(eq(collages.userId, userId));
+  return db.query.collages.findMany({
+    columns: {
+      userId: false,
+      cloudinaryResponse: false,
+    },
+    where: eq(collages.userId, userId),
+    orderBy: desc(collages.createdAt),
+    limit: 12,
+  });
 };
 
 export const getCollageById = async (id: string) => {

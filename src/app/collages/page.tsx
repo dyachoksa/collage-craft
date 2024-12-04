@@ -1,7 +1,5 @@
-import Link from "next/link";
-
 import { getCollages } from "~/actions/collages";
-import { NewCollage } from "~/components/collages";
+import { CollageCard, NewCollage } from "~/components/collages";
 import { requireUserId } from "~/hooks";
 
 export default async function Collages() {
@@ -30,16 +28,9 @@ export default async function Collages() {
         </div>
       )}
 
-      <div className="mt-8">
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {collages.map((collage) => (
-          <div key={collage.id}>
-            <Link
-              href={`/collages/${collage.id}`}
-              className="text-lg font-medium text-gray-800 hover:text-primary-700 hover:underline"
-            >
-              {collage.name || "Untitled"}
-            </Link>
-          </div>
+          <CollageCard key={collage.id} collage={collage} />
         ))}
       </div>
     </div>
