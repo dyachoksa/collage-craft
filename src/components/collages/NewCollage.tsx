@@ -34,10 +34,8 @@ export default function NewCollage() {
   const onSubmit = form.handleSubmit(async (data) => {
     data.name = data.name?.trim() || null;
 
-    const collage = await createCollage(data);
-    console.log(collage);
-
-    toggleOpen(false);
+    await createCollage(data);
+    // toggleOpen(false);
   });
 
   const isSubmitting = form.formState.isSubmitting;

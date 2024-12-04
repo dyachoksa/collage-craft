@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { getCollages } from "~/actions/collages";
 import { NewCollage } from "~/components/collages";
 import { requireUserId } from "~/hooks";
@@ -12,7 +14,7 @@ export default async function Collages() {
   return (
     <div className="pt-16 section-wrapper">
       <div className="flex justify-between items-center">
-        <h1 className="scroll-m-20 text-4xl text-gray-900 font-extrabold tracking-tight lg:text-5xl">My collages</h1>
+        <h1 className="h1">My collages</h1>
 
         <div>
           <NewCollage />
@@ -28,9 +30,16 @@ export default async function Collages() {
         </div>
       )}
 
-      <div>
+      <div className="mt-8">
         {collages.map((collage) => (
-          <div key={collage.id}>{collage.name || "Untitled"}</div>
+          <div key={collage.id}>
+            <Link
+              href={`/collages/${collage.id}`}
+              className="text-lg font-medium text-gray-800 hover:text-primary-700 hover:underline"
+            >
+              {collage.name || "Untitled"}
+            </Link>
+          </div>
         ))}
       </div>
     </div>
