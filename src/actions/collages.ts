@@ -22,20 +22,42 @@ const getCloudinaryFolder = () => {
   return [baseFolder, new Date().getFullYear().toString()].join("/");
 };
 
-export const getCollages = async (userId?: string): Promise<Omit<SelectCollage, "userId" | "cloudinaryResponse">[]> => {
+export const getCollages = async ({
+  userId,
+  page = 1,
+  pageSize = 12,
+}: {
+  page?: number;
+  pageSize?: number;
+  userId?: string;
+}): Promise<{
+  items: Omit<SelectCollage, "userId" | "cloudinaryResponse">[];
+  total: number;
+  totalPages: number;
+  page: number;
+  pageSize: number;
+}> => {
   if (!userId) {
     userId = await requireUserId();
   }
 
-  return db.query.collages.findMany({
+  const itemsPromise = db.query.collages.findMany({
     columns: {
       userId: false,
       cloudinaryResponse: false,
     },
     where: eq(collages.userId, userId),
     orderBy: desc(collages.createdAt),
-    limit: 12,
+    limit: pageSize,
+    offset: (page - 1) * pageSize,
   });
+  const totalPromise = db.$count(collages, eq(collages.userId, userId));
+
+  const [items, total] = await Promise.all([itemsPromise, totalPromise]);
+
+  const totalPages = Math.ceil(total / pageSize);
+
+  return { items, total, totalPages, page, pageSize };
 };
 
 export const getCollageById = async (id: string) => {
