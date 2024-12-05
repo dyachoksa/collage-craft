@@ -42,7 +42,7 @@ export default function NewCollage() {
 
   return (
     <>
-      <Button variant="ghost" onClick={toggleOpen}>
+      <Button variant="default" onClick={toggleOpen}>
         <AddIcon className="h-6 w-6" />
         <span className="ml-2">New collage</span>
       </Button>
@@ -74,7 +74,7 @@ export default function NewCollage() {
             </Button>
 
             <DialogClose asChild>
-              <Button type="button" variant="ghost" disabled={isSubmitting}>
+              <Button type="button" variant="ghost" onClick={toggleOpen} disabled={isSubmitting}>
                 Close
               </Button>
             </DialogClose>

@@ -5,7 +5,7 @@ import { ArrowLeftIcon } from "lucide-react";
 
 import { getCollageDetails } from "~/actions/collages";
 import AppImage from "~/components/AppImage";
-import { GenerateCollageButton, ImageUploader, ProcessingIndicator } from "~/components/collages";
+import { EditableCollageName, GenerateCollageButton, ImageUploader, ProcessingIndicator } from "~/components/collages";
 import PlaceholderIcon from "~/components/PlaceholderIcon";
 import { requireUserId } from "~/hooks";
 
@@ -32,7 +32,7 @@ export default async function CollageDetails({ params }: Props) {
           <ArrowLeftIcon className="size-8 md:size-10" />
         </Link>
 
-        <h1 className="h1">{collage.name || "Untitled"}</h1>
+        <EditableCollageName collage={collage} />
       </div>
 
       <div className="mt-8 grid grid-cols-5 gap-4">

@@ -97,6 +97,23 @@ export const createCollage = async (data: CollageData) => {
   redirect(`/collages/${collage.id}`);
 };
 
+export const updateCollageName = async (id: string, name: string | null, userId?: string) => {
+  if (!userId) {
+    userId = await requireUserId();
+  }
+
+  const updatedCollage = await db
+    .update(collages)
+    .set({ name })
+    .where(and(eq(collages.userId, userId), eq(collages.id, id)))
+    .returning()
+    .then((res) => res[0]);
+
+  revalidatePath(`/collages/${updatedCollage.id}`);
+
+  return updatedCollage;
+};
+
 export const updateCollage = async (id: SelectCollage["id"], data: Partial<Omit<SelectCollage, "id" | "userId">>) => {
   return db
     .update(collages)
