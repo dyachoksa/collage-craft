@@ -21,19 +21,14 @@ export default function Footer() {
             <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Product</h3>
             <ul className="mt-4 space-y-4">
               <li>
-                <a href="#features" className="text-base text-gray-500 hover:text-pink-700">
+                <Link href="/#features" className="text-base text-gray-500 hover:text-pink-700">
                   Features
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#examples" className="text-base text-gray-500 hover:text-pink-700">
+                <Link href="/#examples" className="text-base text-gray-500 hover:text-pink-700">
                   Examples
-                </a>
-              </li>
-              <li>
-                <a href="#pricing" className="text-base text-gray-500 hover:text-pink-700">
-                  Pricing
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -47,14 +42,9 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="#" className="text-base text-gray-500 hover:text-pink-700">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-base text-gray-500 hover:text-pink-700">
-                  Careers
-                </a>
+                <Link href="/collages" className="text-base text-gray-500 hover:text-pink-700">
+                  Collages
+                </Link>
               </li>
             </ul>
           </div>

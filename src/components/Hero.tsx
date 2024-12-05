@@ -1,5 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { ArrowRightIcon, Wand2Icon } from "lucide-react";
 
 import designInspirationSvg from "~/assets/undraw-design-inspiration.svg";
@@ -22,20 +24,37 @@ export default function Hero() {
                 perfectly, every time.
               </p>
 
-              <div className="mt-5 sm:mt-8 sm:flex sm:justify-center md:justify-start">
-                <div>
-                  <Button className="w-full" size="lg">
-                    <Wand2Icon className="h-5 w-5 mr-2" />
-                    Try it free
-                  </Button>
-                </div>
+              <div className="mt-5 sm:mt-8 sm:flex sm:justify-center md:justify-start sm:gap-3">
+                <SignedOut>
+                  <div>
+                    <SignInButton>
+                      <Button className="w-full" size="lg">
+                        <Wand2Icon className="h-5 w-5 mr-2" />
+                        Try it free
+                      </Button>
+                    </SignInButton>
+                  </div>
 
-                <div className="mt-3 sm:mt-0 sm:ml-3">
-                  <Button className="w-full" size="lg" variant="secondary">
-                    View examples
-                    <ArrowRightIcon className="h-5 w-5 ml-2" />
-                  </Button>
-                </div>
+                  <div>
+                    <Button className="w-full" size="lg" variant="secondary" asChild>
+                      <a href="#examples">
+                        View examples
+                        <ArrowRightIcon className="h-5 w-5 ml-2" />
+                      </a>
+                    </Button>
+                  </div>
+                </SignedOut>
+
+                <SignedIn>
+                  <div>
+                    <Button className="w-full" size="lg" asChild>
+                      <Link href="/collages">
+                        <Wand2Icon className="h-5 w-5 mr-2" />
+                        Make a collage
+                      </Link>
+                    </Button>
+                  </div>
+                </SignedIn>
               </div>
             </div>
           </div>
