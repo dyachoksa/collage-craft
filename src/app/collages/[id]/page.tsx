@@ -4,8 +4,13 @@ import { notFound } from "next/navigation";
 import { ArrowLeftIcon, TriangleAlertIcon } from "lucide-react";
 
 import { getCollageDetails } from "~/actions/collages";
-import AppImage from "~/components/AppImage";
-import { EditableCollageName, GenerateCollageButton, ImageUploader, ProcessingIndicator } from "~/components/collages";
+import {
+  EditableCollageName,
+  GenerateCollageButton,
+  ImageCard,
+  ImageUploader,
+  ProcessingIndicator,
+} from "~/components/collages";
 import PlaceholderIcon from "~/components/PlaceholderIcon";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { MAX_IMAGES_PER_COLLAGE } from "~/consts";
@@ -14,8 +19,6 @@ import { requireUserId } from "~/hooks";
 interface Props {
   params: Promise<{ id: string }>;
 }
-
-// const previewTransformation = "c_fill,g_auto,h_256,w_256";
 
 export default async function CollageDetails({ params }: Props) {
   const id = (await params).id;
@@ -44,19 +47,7 @@ export default async function CollageDetails({ params }: Props) {
         <div className="col-span-2 pr-4 py-4 border-r border-gray-200">
           <div className="grid grid-cols-3 gap-4">
             {collage.images.map((image) => (
-              <div key={image.id} className="rounded-md overflow-hidden hover:scale-105 transition-transform">
-                <AppImage
-                  src={image.cloudinaryId}
-                  width={256}
-                  height={256}
-                  crop={[]}
-                  namedTransformations="thumb_256"
-                  transformations={[]}
-                  preserveTransformations={false}
-                  alt="Collage image"
-                  unoptimized
-                />
-              </div>
+              <ImageCard key={image.id} image={image} />
             ))}
 
             {canAddImages && <ImageUploader collageId={collage.id} />}

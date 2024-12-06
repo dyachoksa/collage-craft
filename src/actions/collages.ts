@@ -152,6 +152,29 @@ export const addImage = async (data: AddImageData, userId?: string) => {
   return image;
 };
 
+export const deleteImage = async (id: string, collageId: string, userId?: string) => {
+  if (!userId) {
+    userId = await requireUserId();
+  }
+
+  const image = await db.query.images.findFirst({
+    where: and(eq(images.id, id), eq(images.userId, userId), eq(images.collageId, collageId)),
+  });
+
+  if (!image) {
+    throw new Error("Image not found");
+  }
+
+  await cloudinary.uploader.destroy(image.cloudinaryId, { resource_type: "image", invalidate: true });
+
+  await db
+    .delete(images)
+    .where(eq(images.id, id))
+    .then(() => {
+      revalidatePath(`/collages/${image.collageId}`);
+    });
+};
+
 export const generateCollage = async (collageId: string, userId?: string) => {
   if (!userId) {
     userId = await requireUserId();
