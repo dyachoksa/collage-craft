@@ -25,6 +25,8 @@ export default async function CollageDetails({ params }: Props) {
     return notFound();
   }
 
+  const canGenerate = collage.images.length >= 2;
+
   return (
     <div className="pt-16 section-wrapper">
       <div className="flex items-center gap-4">
@@ -62,7 +64,7 @@ export default async function CollageDetails({ params }: Props) {
           {!collage.cloudinaryId && (
             <div className="relative min-h-60 h-full p-8 flex items-center justify-center gap-4">
               <PlaceholderIcon className="block text-gray-200 fixed h-72" />
-              <GenerateCollageButton collageId={collage.id} />
+              {canGenerate && <GenerateCollageButton collageId={collage.id} />}
             </div>
           )}
 
@@ -85,7 +87,7 @@ export default async function CollageDetails({ params }: Props) {
               </a>
 
               <div className="mt-4">
-                <GenerateCollageButton collageId={collage.id} label="Re-generate" />
+                {canGenerate && <GenerateCollageButton collageId={collage.id} label="Re-generate" />}
               </div>
             </div>
           )}
