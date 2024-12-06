@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, TriangleAlertIcon } from "lucide-react";
 
 import { getCollageDetails } from "~/actions/collages";
 import AppImage from "~/components/AppImage";
 import { EditableCollageName, GenerateCollageButton, ImageUploader, ProcessingIndicator } from "~/components/collages";
 import PlaceholderIcon from "~/components/PlaceholderIcon";
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { MAX_IMAGES_PER_COLLAGE } from "~/consts";
 import { requireUserId } from "~/hooks";
 
 interface Props {
@@ -26,6 +28,7 @@ export default async function CollageDetails({ params }: Props) {
   }
 
   const canGenerate = collage.images.length >= 2;
+  const canAddImages = collage.images.length < MAX_IMAGES_PER_COLLAGE;
 
   return (
     <div className="pt-16 section-wrapper">
@@ -41,7 +44,7 @@ export default async function CollageDetails({ params }: Props) {
         <div className="col-span-2 pr-4 py-4 border-r border-gray-200">
           <div className="grid grid-cols-3 gap-4">
             {collage.images.map((image) => (
-              <div key={image.id} className="rounded-md overflow-hidden">
+              <div key={image.id} className="rounded-md overflow-hidden hover:scale-105 transition-transform">
                 <AppImage
                   src={image.cloudinaryId}
                   width={256}
@@ -56,8 +59,20 @@ export default async function CollageDetails({ params }: Props) {
               </div>
             ))}
 
-            <ImageUploader collageId={collage.id} />
+            {canAddImages && <ImageUploader collageId={collage.id} />}
           </div>
+
+          {!canAddImages && (
+            <div className="mt-8">
+              <Alert>
+                <TriangleAlertIcon className="size-4" />
+                <AlertTitle className="pt-0.5">Limit reached</AlertTitle>
+                <AlertDescription className="text-gray-500">
+                  You have reached the maximum number of images per collage.
+                </AlertDescription>
+              </Alert>
+            </div>
+          )}
         </div>
 
         <div className="col-span-3 my-4">

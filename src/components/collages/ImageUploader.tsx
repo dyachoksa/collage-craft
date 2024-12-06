@@ -2,6 +2,7 @@
 
 import { CldUploadButton, CloudinaryUploadWidgetResults } from "next-cloudinary";
 
+import { formatDate } from "date-fns";
 import { ImagePlus as PlusIcon } from "lucide-react";
 
 import { addImage } from "~/actions/collages";
@@ -12,7 +13,9 @@ const appEnv = process.env.NEXT_PUBLIC_APP_ENV!;
 
 const getFolder = () => {
   const baseFolder = process.env.NODE_ENV === "production" ? "collages" : `collages-${appEnv}`;
-  return [baseFolder, new Date().getFullYear().toString()].join("/");
+  const today = new Date();
+
+  return [baseFolder, formatDate(today, "yyyy/MM")].join("/");
 };
 
 interface Props {
@@ -44,18 +47,20 @@ export default function ImageUploader({ collageId }: Props) {
 
   return (
     <CldUploadButton
-      className="min-h-32 rounded-md border border-dashed border-primary-500 flex flex-col items-center justify-center gap-4"
+      className="min-h-32 rounded-md border border-dashed border-primary-500 flex flex-col items-center justify-center gap-4 hover:bg-slate-50"
       signatureEndpoint="/api/sign-cloudinary-params"
       uploadPreset={defaultUploadPreset}
       options={{
         sources: ["local", "instagram", "unsplash"],
-        multiple: true,
+        showUploadMoreButton: false,
+        singleUploadAutoClose: true,
+        multiple: false,
         maxFiles: 5,
         maxFileSize: 5500000, // 5.5MB
         clientAllowedFormats: ["image"],
         folder: getFolder(),
         context: { collageId },
-        tags: ["collage-craft", "source", appEnv, collageId],
+        tags: ["collage-craft", "source", appEnv],
       }}
       onSuccess={onSuccessUpload}
     >

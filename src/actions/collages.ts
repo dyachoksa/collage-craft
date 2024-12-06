@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { and, desc, eq } from "drizzle-orm";
 import { ulid } from "ulid";
 
+import { MAX_IMAGES_PER_COLLAGE } from "~/consts";
 import { db } from "~/database";
 import { collages, images, SelectCollage } from "~/database/schema";
 import { requireUserId } from "~/hooks";
@@ -126,6 +127,18 @@ export const updateCollage = async (id: SelectCollage["id"], data: Partial<Omit<
 export const addImage = async (data: AddImageData, userId?: string) => {
   if (!userId) {
     userId = await requireUserId();
+  }
+
+  const collage = await getCollageById(data.collageId);
+  if (!collage) {
+    throw new Error("Collage not found");
+  }
+
+  const existingImagesCount = await db.$count(images, eq(images.collageId, data.collageId));
+
+  if (existingImagesCount >= MAX_IMAGES_PER_COLLAGE) {
+    await cloudinary.uploader.destroy(data.cloudinaryId, { resource_type: "image" });
+    throw new Error("Maximum number of images per collage reached");
   }
 
   const { cloudinaryResponse: _, ...image } = await db
