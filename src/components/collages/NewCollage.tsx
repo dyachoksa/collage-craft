@@ -19,10 +19,13 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import { Form } from "~/components/ui/form";
+import { useToast } from "~/hooks/use-toast";
 import { collageSchema, type CollageData } from "~/schemas/collages";
 
 export default function NewCollage() {
   const [open, toggleOpen] = useToggle(false);
+
+  const { toast } = useToast();
 
   const form = useForm<CollageData>({
     resolver: zodResolver(collageSchema),
@@ -35,7 +38,11 @@ export default function NewCollage() {
     data.name = data.name?.trim() || null;
 
     await createCollage(data);
-    // toggleOpen(false);
+
+    toast({
+      title: "Well done!",
+      description: "Collage has been started successfully. Now you can add images to it.",
+    });
   });
 
   const isSubmitting = form.formState.isSubmitting;
@@ -47,7 +54,14 @@ export default function NewCollage() {
         <span className="ml-2">New collage</span>
       </Button>
 
-      <Dialog open={open} onOpenChange={() => form.reset({ name: "" })} modal>
+      <Dialog
+        open={open}
+        onOpenChange={(value) => {
+          form.reset({ name: "" });
+          toggleOpen(value);
+        }}
+        modal
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Create a new collage</DialogTitle>

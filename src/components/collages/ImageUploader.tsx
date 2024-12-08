@@ -6,6 +6,7 @@ import { formatDate } from "date-fns";
 import { ImagePlus as PlusIcon } from "lucide-react";
 
 import { addImage } from "~/actions/collages";
+import { useToast } from "~/hooks/use-toast";
 
 const defaultUploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
@@ -27,6 +28,8 @@ interface Props {
  * @see https://cloudinary.com/documentation/image_upload_api_reference#upload_response
  */
 export default function ImageUploader({ collageId }: Props) {
+  const { toast } = useToast();
+
   const onSuccessUpload = async (result: CloudinaryUploadWidgetResults) => {
     if (result.event !== "success") return;
     if (typeof result.info !== "object") return;
@@ -39,9 +42,18 @@ export default function ImageUploader({ collageId }: Props) {
         cloudinaryId,
         cloudinaryResponse: result.info,
       });
+
+      toast({
+        title: "Success",
+        description: "Image added successfully",
+      });
     } catch (error) {
-      // todo: add toast notification
       console.warn(error);
+      toast({
+        title: "Error",
+        description: "Failed to add image",
+        variant: "destructive",
+      });
     }
   };
 

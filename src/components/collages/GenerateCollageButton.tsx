@@ -6,6 +6,7 @@ import { Loader2Icon, WandSparklesIcon } from "lucide-react";
 
 import { generateCollage } from "~/actions/collages";
 import { Button } from "~/components/ui/button";
+import { useToast } from "~/hooks/use-toast";
 
 interface Props {
   collageId: string;
@@ -15,14 +16,29 @@ interface Props {
 export default function GenerateCollageButton({ collageId, label = "Make collage" }: Props) {
   const [isProcessing, toggleProcessing] = useToggle(false);
 
+  const { toast } = useToast();
+
   const onClick = async () => {
     try {
       toggleProcessing(true);
 
       await generateCollage(collageId);
+
+      toast({
+        title: "Success",
+        description: "Collage has been queued for generation. Please wait a moment. It will be done shortly.",
+      });
     } catch (error) {
-      // todo: add toast notification
-      console.warn(error);
+      toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: (
+          <>
+            <p>Failed to generate collage. Please try again later.</p>
+            <p className="pt-1 text-sm">Details: {(error as Error).message}</p>
+          </>
+        ),
+      });
     } finally {
       toggleProcessing(false);
     }

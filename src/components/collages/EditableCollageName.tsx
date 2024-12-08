@@ -9,6 +9,7 @@ import { PencilLine as EditIcon, Loader2Icon } from "lucide-react";
 import { updateCollageName } from "~/actions/collages";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { useToast } from "~/hooks/use-toast";
 import { collageSchema, type CollageData } from "~/schemas/collages";
 import type { CollageModel } from "~/types";
 
@@ -19,6 +20,8 @@ interface Props {
 export default function EditableCollageName({ collage }: Props) {
   const [editMode, toggleEditMode] = useToggle(false);
 
+  const { toast } = useToast();
+
   const form = useForm<CollageData>({
     resolver: zodResolver(collageSchema),
     defaultValues: {
@@ -27,8 +30,22 @@ export default function EditableCollageName({ collage }: Props) {
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    await updateCollageName(collage.id, data.name || null);
-    toggleEditMode(false);
+    try {
+      await updateCollageName(collage.id, data.name || null);
+
+      toggleEditMode(false);
+      toast({
+        title: "Success",
+        description: "Collage name updated successfully",
+      });
+    } catch (error) {
+      console.warn(error);
+      toast({
+        title: "Something went wrong",
+        description: "Failed to update collage name",
+        variant: "destructive",
+      });
+    }
   });
 
   return (

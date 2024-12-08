@@ -16,6 +16,7 @@ import {
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
+import { useToast } from "~/hooks/use-toast";
 
 interface Props {
   collageId: string;
@@ -25,8 +26,9 @@ export default function DeleteCollageButton({ collageId }: Props) {
   const [isProcessing, setProcessing] = useState(false);
   const [isOpen, setOpen] = useState(false);
 
+  const { toast } = useToast();
+
   const handleDelete = async () => {
-    // todo: add toast notification
     try {
       setProcessing(true);
 
@@ -35,7 +37,21 @@ export default function DeleteCollageButton({ collageId }: Props) {
       setOpen(false);
     } catch (error) {
       setProcessing(false);
-      console.warn(error);
+      if (error && typeof error === "object" && "digest" in error) {
+        // It's a NextJS redirect error
+        toast({
+          title: "Success",
+          description: "Collage deleted successfully",
+        });
+
+        return;
+      }
+
+      toast({
+        title: "Something went wrong",
+        description: "Failed to delete collage",
+        variant: "destructive",
+      });
     }
   };
 
