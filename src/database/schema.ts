@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { index, jsonb, pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { boolean, index, jsonb, pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
 export const collageStatus = pgEnum("collage_status", ["new", "draft", "created"]);
 
@@ -14,13 +14,19 @@ export const collages = pgTable(
     cloudinaryUrl: varchar("cloudinary_url"),
     cloudinaryResponse: jsonb("cloudinary_response").default({}),
     lastGeneratedAt: timestamp("last_generated_at"),
+    isPublic: boolean("is_public").notNull().default(false),
+    publicSlug: varchar("public_slug"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
       .notNull()
       .$onUpdate(() => new Date()),
   },
-  (t) => [index("idx_collages_user").on(t.userId), index("idx_collages_cloudinary").on(t.cloudinaryId)]
+  (t) => [
+    index("idx_collages_user").on(t.userId),
+    index("idx_collages_cloudinary").on(t.cloudinaryId),
+    index("idx_collages_public_slug").on(t.publicSlug),
+  ]
 );
 
 export const images = pgTable(

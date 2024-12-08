@@ -14,6 +14,7 @@ import { requireUserId } from "~/hooks";
 import { makeSequence, shuffleArray } from "~/lib/arrays";
 import cloudinary from "~/lib/cloudinary";
 import { buildTemplate } from "~/lib/collages/binarySplit";
+import { isUUID } from "~/lib/strings";
 import type { CollageData } from "~/schemas/collages";
 import type { AddImageData } from "~/types";
 
@@ -88,6 +89,15 @@ export const getCollageDetails = async (id: string, userId?: string) => {
   });
 };
 
+export const getPublicCollage = async (slug: string) => {
+  return db.query.collages.findFirst({
+    columns: {
+      cloudinaryResponse: false,
+    },
+    where: and(eq(collages.isPublic, true), isUUID(slug) ? eq(collages.id, slug) : eq(collages.publicSlug, slug)),
+  });
+};
+
 export const createCollage = async (data: CollageData) => {
   const userId = await requireUserId();
 
@@ -110,6 +120,40 @@ export const updateCollageName = async (id: string, name: string | null, userId?
     .update(collages)
     .set({ name })
     .where(and(eq(collages.userId, userId), eq(collages.id, id)))
+    .returning()
+    .then((res) => res[0]);
+
+  revalidatePath(`/collages/${updatedCollage.id}`);
+
+  return updatedCollage;
+};
+
+export const updateCollageVisibility = async ({
+  id,
+  isPublic,
+  publicSlug,
+  userId,
+}: {
+  id: string;
+  isPublic: boolean;
+  publicSlug?: string | null;
+  userId?: string;
+}) => {
+  if (!userId) {
+    userId = await requireUserId();
+  }
+
+  const collage = await db.query.collages.findFirst({
+    where: and(eq(collages.userId, userId), eq(collages.id, id)),
+  });
+  if (!collage) {
+    throw new Error("Collage not found");
+  }
+
+  const updatedCollage = await db
+    .update(collages)
+    .set({ isPublic, publicSlug })
+    .where(and(eq(collages.id, id)))
     .returning()
     .then((res) => res[0]);
 

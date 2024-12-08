@@ -11,6 +11,7 @@ import {
   ImageCard,
   ImageUploader,
   ProcessingIndicator,
+  PublicSettingsBlock,
 } from "~/components/collages";
 import PlaceholderIcon from "~/components/PlaceholderIcon";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
@@ -35,7 +36,7 @@ export default async function CollageDetails({ params }: Props) {
   const canAddImages = collage.images.length < MAX_IMAGES_PER_COLLAGE;
 
   return (
-    <div className="pt-16 section-wrapper">
+    <div className="py-16 section-wrapper">
       <div className="flex items-center gap-4">
         <Link href="/collages" className="block text-gray-700 hover:text-primary-700">
           <ArrowLeftIcon className="size-8 md:size-10" />
@@ -98,8 +99,9 @@ export default async function CollageDetails({ params }: Props) {
               </a>
             )}
 
-            <div className="mt-4 flex flex-row items-center gap-4">
-              <div>
+            <div className="mt-4 flex flex-row items-start gap-6">
+              <div className="flex-grow">{collage.cloudinaryUrl && <PublicSettingsBlock collage={collage} />}</div>
+              <div className="ml-auto">
                 {canGenerate && collage.cloudinaryUrl && collage.status === "created" && (
                   <GenerateCollageButton collageId={collage.id} label="Re-generate" />
                 )}

@@ -3,7 +3,7 @@
 import { ControllerProps, FieldValues, Path } from "react-hook-form";
 
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
+import { Switch } from "~/components/ui/switch";
 
 interface FormProps<T extends FieldValues> {
   control: ControllerProps<T>["control"];
@@ -13,33 +13,35 @@ interface FormProps<T extends FieldValues> {
 interface ComponentProps<T extends FieldValues> extends FormProps<T> {
   label: string;
   description?: React.ReactNode;
-  hint?: React.ReactNode;
 }
 
 type Props<T extends FieldValues> = ComponentProps<T> &
-  Omit<React.ComponentPropsWithoutRef<typeof Input>, keyof ComponentProps<T>>;
+  Omit<React.ComponentPropsWithoutRef<typeof Switch>, keyof ComponentProps<T>>;
 
 export default function FormInput<T extends FieldValues>(props: Props<T>) {
-  const { control, name, label, description, hint, ...inputProps } = props;
+  const { control, name, label, description, ...inputProps } = props;
 
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
-          <div className="flex items-center justify-between gap-2">
-            <FormLabel>{label}</FormLabel>
-            {hint}
-          </div>
-
+        <FormItem className="flex items-start gap-4 space-y-0">
           <FormControl>
-            <Input {...inputProps} {...field} />
+            <Switch
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              name={field.name}
+              disabled={field.disabled}
+              {...inputProps}
+            />
           </FormControl>
 
-          {description &&
-            (typeof description === "string" ? <FormDescription>{description}</FormDescription> : description)}
-          <FormMessage />
+          <div className="flex flex-col gap-1">
+            <FormLabel>{label}</FormLabel>
+            {description && <FormDescription>{description}</FormDescription>}
+            <FormMessage />
+          </div>
         </FormItem>
       )}
     />

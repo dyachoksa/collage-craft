@@ -11,6 +11,8 @@ export interface CollageModel {
   cloudinaryId: string | null;
   cloudinaryUrl: string | null;
   lastGeneratedAt: Date | null;
+  isPublic: boolean;
+  publicSlug: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
