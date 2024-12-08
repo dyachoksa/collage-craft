@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { formatDate } from "date-fns";
 import { and, desc, eq } from "drizzle-orm";
 import { ulid } from "ulid";
 
@@ -20,7 +21,9 @@ const appEnv = process.env.NEXT_PUBLIC_APP_ENV!;
 
 const getCloudinaryFolder = () => {
   const baseFolder = process.env.NODE_ENV === "production" ? "collages" : `collages-${appEnv}`;
-  return [baseFolder, new Date().getFullYear().toString()].join("/");
+  const today = new Date();
+
+  return [baseFolder, formatDate(today, "yyyy/MM")].join("/");
 };
 
 export const getCollages = async ({
@@ -253,4 +256,40 @@ export const generateCollage = async (collageId: string, userId?: string) => {
   revalidatePath(`/collages/${collageId}`);
 
   return cloudinaryResponse;
+};
+
+export const deleteCollage = async (id: string, userId?: string) => {
+  if (!userId) {
+    userId = await requireUserId();
+  }
+
+  const collage = await db.query.collages.findFirst({
+    where: and(eq(collages.id, id), eq(collages.userId, userId)),
+    with: {
+      images: {
+        columns: {
+          userId: false,
+          cloudinaryResponse: false,
+        },
+      },
+    },
+  });
+
+  if (!collage) {
+    throw new Error("Collage not found");
+  }
+
+  const promises = collage.images.map((image) => {
+    return cloudinary.uploader.destroy(image.cloudinaryId, { resource_type: "image", invalidate: true });
+  });
+
+  if (collage.cloudinaryId) {
+    promises.push(cloudinary.uploader.destroy(collage.cloudinaryId, { resource_type: "image", invalidate: true }));
+  }
+
+  await Promise.all(promises);
+
+  await db.delete(collages).where(eq(collages.id, id));
+
+  redirect("/collages");
 };

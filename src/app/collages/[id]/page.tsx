@@ -5,6 +5,7 @@ import { ArrowLeftIcon, TriangleAlertIcon } from "lucide-react";
 
 import { getCollageDetails } from "~/actions/collages";
 import {
+  DeleteCollageButton,
   EditableCollageName,
   GenerateCollageButton,
   ImageCard,
@@ -41,6 +42,10 @@ export default async function CollageDetails({ params }: Props) {
         </Link>
 
         <EditableCollageName collage={collage} />
+
+        <div className="ml-auto">
+          <DeleteCollageButton collageId={collage.id} />
+        </div>
       </div>
 
       <div className="mt-8 grid grid-cols-5 gap-4">
@@ -76,8 +81,8 @@ export default async function CollageDetails({ params }: Props) {
 
           {collage.status === "draft" && <ProcessingIndicator />}
 
-          {collage.cloudinaryUrl && collage.status === "created" && (
-            <div>
+          <div>
+            {collage.cloudinaryUrl && collage.status === "created" && (
               <a
                 href={collage.cloudinaryUrl}
                 target="_blank"
@@ -91,12 +96,16 @@ export default async function CollageDetails({ params }: Props) {
                   className="w-full h-auto"
                 />
               </a>
+            )}
 
-              <div className="mt-4">
-                {canGenerate && <GenerateCollageButton collageId={collage.id} label="Re-generate" />}
+            <div className="mt-4 flex flex-row items-center gap-4">
+              <div>
+                {canGenerate && collage.cloudinaryUrl && collage.status === "created" && (
+                  <GenerateCollageButton collageId={collage.id} label="Re-generate" />
+                )}
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
