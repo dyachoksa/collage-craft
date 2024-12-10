@@ -15,18 +15,14 @@ export const collages = pgTable(
     cloudinaryResponse: jsonb("cloudinary_response").default({}),
     lastGeneratedAt: timestamp("last_generated_at"),
     isPublic: boolean("is_public").notNull().default(false),
-    publicSlug: varchar("public_slug"),
+    publicSlug: varchar("public_slug").unique("unq_collages_public_slug"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
       .notNull()
       .$onUpdate(() => new Date()),
   },
-  (t) => [
-    index("idx_collages_user").on(t.userId),
-    index("idx_collages_cloudinary").on(t.cloudinaryId),
-    index("idx_collages_public_slug").on(t.publicSlug),
-  ]
+  (t) => [index("idx_collages_user").on(t.userId), index("idx_collages_cloudinary").on(t.cloudinaryId)]
 );
 
 export const images = pgTable(

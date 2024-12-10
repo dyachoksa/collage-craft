@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { formatDate } from "date-fns";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, ne } from "drizzle-orm";
 import { ulid } from "ulid";
 
 import { MAX_IMAGES_PER_COLLAGE } from "~/consts";
@@ -143,6 +143,16 @@ export const updateCollageVisibility = async ({
     userId = await requireUserId();
   }
 
+  if (publicSlug) {
+    const res = await db.query.collages.findFirst({
+      columns: { id: true },
+      where: and(eq(collages.publicSlug, publicSlug), ne(collages.id, id)),
+    });
+    if (res) {
+      return { success: false, message: "This slug is already taken" };
+    }
+  }
+
   const collage = await db.query.collages.findFirst({
     where: and(eq(collages.userId, userId), eq(collages.id, id)),
   });
@@ -159,7 +169,7 @@ export const updateCollageVisibility = async ({
 
   revalidatePath(`/collages/${updatedCollage.id}`);
 
-  return updatedCollage;
+  return { collage: updatedCollage, success: true, message: "Collage settings updated successfully" };
 };
 
 export const updateCollage = async (id: SelectCollage["id"], data: Partial<Omit<SelectCollage, "id" | "userId">>) => {

@@ -7,6 +7,6 @@
 - [x] Allow generation only when at least 2 images are uploaded
 - [x] Add a way to delete an image from a collage
 - [x] Allow setting collage public access
-- [ ] Make collage public slug unique
+- [x] Make collage public slug unique
 - [x] Add toast notifications
 - [ ] Add limits to the number of collages and generations per user

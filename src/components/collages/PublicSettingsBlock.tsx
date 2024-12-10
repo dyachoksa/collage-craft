@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +30,8 @@ const origin = process.env.NEXT_PUBLIC_APP_URL;
 export default function PublicSettingsBlock({ collage }: Props) {
   const { toast } = useToast();
 
+  const [error, setError] = useState<string | null>(null);
+
   const form = useForm<FormData>({
     defaultValues: { isPublic: collage.isPublic, publicSlug: collage.publicSlug || "" },
     resolver: zodResolver(schema),
@@ -36,21 +39,27 @@ export default function PublicSettingsBlock({ collage }: Props) {
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
-      await updateCollageVisibility({
+      setError(null);
+
+      const res = await updateCollageVisibility({
         id: collage.id,
         isPublic: data.isPublic,
         publicSlug: data.publicSlug || null,
       });
 
-      toast({
-        title: "Success",
-        description: "Collage visibility updated successfully",
-      });
+      if (!res.success) {
+        setError(res.message);
+      } else {
+        toast({
+          title: "Success",
+          description: "Collage settings updated successfully",
+        });
+      }
     } catch (error) {
       console.warn(error);
       toast({
         title: "Error",
-        description: "Cannot update collage visibility now. Please try again later.",
+        description: "Cannot update collage settings now. Please try again later.",
         variant: "destructive",
       });
     }
@@ -94,6 +103,8 @@ export default function PublicSettingsBlock({ collage }: Props) {
                 />
               </>
             )}
+
+            {error && <p className="text-sm text-red-500 dark:text-red-400">{error}</p>}
 
             <div>
               <Button type="submit" variant="outline" disabled={submitDisabled}>
