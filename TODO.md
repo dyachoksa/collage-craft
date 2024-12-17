@@ -9,4 +9,4 @@
 - [x] Allow setting collage public access
 - [x] Make collage public slug unique
 - [x] Add toast notifications
-- [ ] Add limits to the number of collages and generations per user
+- [x] Add limits to the number of collages and generations per user

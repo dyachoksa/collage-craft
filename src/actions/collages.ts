@@ -7,7 +7,7 @@ import { formatDate } from "date-fns";
 import { and, desc, eq, ne } from "drizzle-orm";
 import { ulid } from "ulid";
 
-import { MAX_IMAGES_PER_COLLAGE } from "~/consts";
+import { MAX_COLLAGES_PER_USER, MAX_IMAGES_PER_COLLAGE } from "~/consts";
 import { db } from "~/database";
 import { collages, images, SelectCollage } from "~/database/schema";
 import { requireUserId } from "~/hooks";
@@ -100,6 +100,11 @@ export const getPublicCollage = async (slug: string) => {
 
 export const createCollage = async (data: CollageData) => {
   const userId = await requireUserId();
+
+  const existingCollagesCount = await db.$count(collages, eq(collages.userId, userId));
+  if (existingCollagesCount >= MAX_COLLAGES_PER_USER) {
+    throw new Error("You have reached the maximum number of collages");
+  }
 
   // note: here should be server-side validation using zod 'collageSchema' schema
   const collage = await db

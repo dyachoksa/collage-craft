@@ -1,5 +1,8 @@
+import { TriangleAlertIcon } from "lucide-react";
+
 import { getCollages } from "~/actions/collages";
 import { CollageCard, NewCollage } from "~/components/collages";
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import {
   Pagination,
   PaginationContent,
@@ -8,6 +11,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "~/components/ui/pagination";
+import { MAX_COLLAGES_PER_USER } from "~/consts";
 import { requireUserId } from "~/hooks";
 import { makeSequence } from "~/lib/arrays";
 
@@ -24,16 +28,29 @@ export default async function Collages({ searchParams }: { searchParams: Promise
   const hasCollages = collages.length > 0;
   const hasNextPage = page < totalPages;
   const hasPreviousPage = page > 1;
+  const reachedCollagesLimit = total >= MAX_COLLAGES_PER_USER;
 
   return (
     <div className="py-16 section-wrapper">
       <div className="flex justify-between items-center">
         <h1 className="h1">My collages</h1>
 
-        <div>
-          <NewCollage />
-        </div>
+        {!reachedCollagesLimit && (
+          <div>
+            <NewCollage />
+          </div>
+        )}
       </div>
+
+      {reachedCollagesLimit && (
+        <Alert className="mt-8">
+          <TriangleAlertIcon className="size-4" />
+          <AlertTitle className="pt-0.5">Limit reached</AlertTitle>
+          <AlertDescription className="text-gray-500">
+            You have reached the maximum number of collages.
+          </AlertDescription>
+        </Alert>
+      )}
 
       {!hasCollages && (
         <div className="mt-8 flex flex-col items-center justify-center min-h-60">
